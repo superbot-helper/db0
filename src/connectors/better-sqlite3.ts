@@ -75,7 +75,9 @@ class StatementWrapper extends BoundableStatement<() => Promise<RawStatement>> {
 
   async run(...params: Primitive[]) {
     const res = (await this._statement()).run(...params);
-    return { success: res.changes > 0, ...res };
+    // `success` is the statement's outcome, not its row count: DDL and any
+    // statement matching no rows execute successfully with `changes === 0`.
+    return { success: true, ...res };
   }
 
   async get(...params: Primitive[]) {
